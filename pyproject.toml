@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "dp100-cli"
-version = "0.1.0"
+dynamic = ["version"]
 description = "Command-line tool and Python library for the ALIENTEK DP100 USB digital power supply"
 readme = "README.md"
 license = "MIT"
@@ -34,6 +34,9 @@ dp100 = "dp100.cli:main"
 [project.urls]
 Homepage = "https://github.com/AndySze/dp100-cli"
 Issues = "https://github.com/AndySze/dp100-cli/issues"
+
+[tool.hatch.version]
+path = "src/dp100/__init__.py"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/dp100"]

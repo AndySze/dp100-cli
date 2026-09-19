@@ -96,6 +96,12 @@ dp100 skill show               # print it
 * The DP100 USB-A port does not supply 5 V while the unit is in USB device mode;
   this tool only uses the USB-C data connection.
 
+## Releasing
+
+Bump `__version__` in `src/dp100/__init__.py`, add a CHANGELOG entry, then
+`git tag vX.Y.Z && git push origin vX.Y.Z`. The `release.yml` workflow builds the
+sdist/wheel and publishes to PyPI via Trusted Publishing (OIDC, no stored token).
+
 ## Development
 
 ```bash
