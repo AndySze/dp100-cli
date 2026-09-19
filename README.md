@@ -72,6 +72,14 @@ Documented in [`docs/PROTOCOL.md`](docs/PROTOCOL.md): 64-byte HID reports,
 `[addr, func, seq, len, data…, CRC-16/MODBUS]`, function `0x30` for live readings and
 `0x35` to read/write setpoints.
 
+## Claude Code skill
+
+The repo ships a [Claude Code](https://claude.com/claude-code) skill at
+[`.claude/skills/dp100/SKILL.md`](.claude/skills/dp100/SKILL.md): open the repo in
+Claude Code and it knows the commands, the safety rules (never enables the output
+unless asked) and the troubleshooting steps. Copy the folder into any other project's
+`.claude/skills/` to use it there.
+
 ## Platform notes
 
 * Verified on macOS 15 (Apple Silicon) with a real unit.
