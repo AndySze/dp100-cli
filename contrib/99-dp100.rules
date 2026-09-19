@@ -1,0 +1,3 @@
+# ALIENTEK DP100 (ATK-MDP100) — allow non-root access to the HID interface
+SUBSYSTEM=="hidraw", ATTRS{idVendor}=="2e3c", ATTRS{idProduct}=="af01", MODE="0666", TAG+="uaccess"
+SUBSYSTEM=="usb", ATTRS{idVendor}=="2e3c", ATTRS{idProduct}=="af01", MODE="0666", TAG+="uaccess"
