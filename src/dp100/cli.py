@@ -6,6 +6,8 @@ import argparse
 import json
 import sys
 import time
+from importlib import resources
+from pathlib import Path
 
 from . import __version__
 from .device import DP100, DP100Error
@@ -58,15 +60,42 @@ def build_parser() -> argparse.ArgumentParser:
     w.add_argument("--seconds", type=float, default=0, help="stop after N s (0 = until Ctrl-C)")
     w.add_argument("--csv", action="store_true", help="CSV: t_s,vout_v,iout_a,power_w,mode")
 
+    k = sub.add_parser("skill", help="Claude Code skill: print or install SKILL.md")
+    k.add_argument("action", choices=["show", "install"], nargs="?", default="show")
+    k.add_argument("--global", dest="user_wide", action="store_true",
+                   help="install to ~/.claude/skills (default: ./.claude/skills of the current project)")
+    k.add_argument("--force", action="store_true", help="overwrite an existing SKILL.md")
+
     r = sub.add_parser("raw", help="send a raw function code, print the reply")
     r.add_argument("func", type=lambda x: int(x, 16), help="function code, hex (30 / 35)")
     r.add_argument("data", nargs="?", default="", help="payload, hex")
     return ap
 
 
+def skill_text() -> str:
+    return resources.files("dp100").joinpath("skill/SKILL.md").read_text(encoding="utf-8")
+
+
+def skill_cmd(a) -> int:
+    if a.action == "show":
+        print(skill_text(), end="")
+        return 0
+    base = Path.home() / ".claude" if a.user_wide else Path.cwd() / ".claude"
+    dst = base / "skills" / "dp100" / "SKILL.md"
+    if dst.exists() and not a.force:
+        print(f"dp100: {dst} exists (use --force to overwrite)", file=sys.stderr)
+        return 1
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    dst.write_text(skill_text(), encoding="utf-8")
+    print(f"installed {dst}")
+    return 0
+
+
 def main(argv=None) -> int:
     ap = build_parser()
     a = ap.parse_args(argv)
+    if a.cmd == "skill":
+        return skill_cmd(a)
 
     def out(d: dict, f) -> None:
         print(json.dumps(d) if a.json else f(d))

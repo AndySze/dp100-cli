@@ -38,6 +38,9 @@ Issues = "https://github.com/AndySze/dp100-cli/issues"
 [tool.hatch.build.targets.wheel]
 packages = ["src/dp100"]
 
+[tool.hatch.build.targets.sdist]
+include = ["src/dp100", "tests", "docs", "contrib", "README.md", "LICENSE", "CHANGELOG.md"]
+
 [tool.ruff]
 line-length = 110
 target-version = "py39"

@@ -73,3 +73,22 @@ def test_on_then_info_cv(fake, capsys):
     assert cli.main(["--json", "info"]) == 0
     out = capsys.readouterr().out.strip().splitlines()[-1]
     assert json.loads(out)["out_mode"] == "CV"
+
+
+def test_skill_show_and_install(tmp_path, monkeypatch, capsys):
+    assert cli.main(["skill"]) == 0
+    text = capsys.readouterr().out
+    assert text.startswith("---\nname: dp100\n")
+    monkeypatch.chdir(tmp_path)
+    assert cli.main(["skill", "install"]) == 0
+    dst = tmp_path / ".claude" / "skills" / "dp100" / "SKILL.md"
+    assert dst.read_text(encoding="utf-8") == text
+    assert cli.main(["skill", "install"]) == 1  # refuses to overwrite
+    assert cli.main(["skill", "install", "--force"]) == 0
+
+
+def test_repo_skill_matches_packaged():
+    from pathlib import Path
+    repo = Path(__file__).resolve().parents[1] / ".claude" / "skills" / "dp100" / "SKILL.md"
+    if repo.exists():
+        assert repo.read_text(encoding="utf-8") == cli.skill_text()

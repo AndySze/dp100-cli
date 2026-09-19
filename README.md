@@ -17,10 +17,13 @@ no vendor software or driver required.
 ## Install
 
 ```bash
-pipx install dp100-cli        # recommended: isolated, gives you the `dp100` command
-# or
-pip install dp100-cli
+pipx install dp100-cli && dp100 skill install --global   # CLI + Claude Code skill, one line
 ```
+
+`pipx` keeps the tool isolated and puts `dp100` on your PATH (plain `pip install dp100-cli`
+works too). The second half is optional: it drops the bundled Claude Code skill into
+`~/.claude/skills/dp100/` so Claude knows the commands and safety rules in every project;
+run `dp100 skill install` (no `--global`) inside a repo to install it for that project only.
 
 Requires Python 3.9+. `hidapi` ships binary wheels for CPython 3.9–3.13; on a
 brand-new interpreter without a wheel, point pipx at an older one, e.g.
@@ -74,11 +77,16 @@ Documented in [`docs/PROTOCOL.md`](docs/PROTOCOL.md): 64-byte HID reports,
 
 ## Claude Code skill
 
-The repo ships a [Claude Code](https://claude.com/claude-code) skill at
-[`.claude/skills/dp100/SKILL.md`](.claude/skills/dp100/SKILL.md): open the repo in
-Claude Code and it knows the commands, the safety rules (never enables the output
-unless asked) and the troubleshooting steps. Copy the folder into any other project's
-`.claude/skills/` to use it there.
+A [Claude Code](https://claude.com/claude-code) skill ships inside the package and in
+this repo at [`.claude/skills/dp100/SKILL.md`](.claude/skills/dp100/SKILL.md). It teaches
+Claude the commands, the safety rules (never enables the output unless asked) and the
+troubleshooting steps.
+
+```bash
+dp100 skill install            # into ./.claude/skills/dp100/ of the current project
+dp100 skill install --global   # into ~/.claude/skills/dp100/ for every project
+dp100 skill show               # print it
+```
 
 ## Platform notes
 
